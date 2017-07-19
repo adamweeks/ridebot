@@ -1,0 +1,23 @@
+{
+  "name": "ridebot",
+  "version": "1.0.0",
+  "description": "ridebot, yo",
+  "main": "index.js",
+  "dependencies": {
+    "botkit": "^0.5.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamweeks/ridebot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamweeks/ridebot/issues"
+  },
+  "homepage": "https://github.com/adamweeks/ridebot#readme"
+}
