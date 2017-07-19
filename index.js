@@ -11,7 +11,7 @@ var controller = Botkit.sparkbot({
     debug: true,
     log: true,
     public_address: process.env.public_address,
-    ciscospark_access_token: process.env.access_token,
+    ciscospark_access_token: process.env.CISCOSPARK_ACCESS_TOKEN,
     secret: process.env.secret
 });
 
