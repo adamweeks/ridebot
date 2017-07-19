@@ -51,26 +51,16 @@ controller.hears('hello', 'direct_message,direct_mention', function(bot, message
 controller.on('direct_mention', function(bot, message) {
   parseAddress(message.text)
     .then((data) => {
-
-      if (data.length) {
-        
-        const lat = data[0].latitude;
-        const lgn = data[0].longitude;
-
-        getETA(lat, lgn).then((data) => {
+       getETA(data.latitude, data.longitude)
+        .then((data) => {
           bot.reply(message, `eta received: ${JSON.stringify(data)}`);
         })
         .catch((error) => {
-          console.error(error);
+          bot.reply(message, `Error: ${JSON.stringify(error)}`);
         });
-
-      } else {
-        bot.reply(message, `Sorry, couldn't find the latitude and longitude for the address provided`);
-      }
-
     })
     .catch((error) => {
-      console.error('error -->', error);
+      bot.reply(message, `Error: ${error}`);
     });
 });
 
@@ -89,14 +79,29 @@ function parseMessage(message) {
  * @param {String} address.text
  */
 function parseAddress(address) {
-  return geocoder.geocode(address);
+  return geocoder.geocode(address)
+    .then((data) => {
+      if (data.length) {
+        
+        const lat = data[0].latitude;
+        const lgn = data[0].longitude;
+
+        return {
+          latitude: lat,
+          longitude: lgn
+        };
+      
+      } else {
+        throw new Error(`Sorry, couldn't find the latitude and longitude for the address provided`);
+      }
+    });
 }
 
-function getETA() {
+function getETA(lat, lng) {
   //the getETA endpoint works with both user and non-user context:
   //leaving the options field empty {}
   //and using promises/then to print out result
-  return lyftPublicApi.getETA(37.7884, -122.4076, {}).then((data) => {
+  return lyftPublicApi.getETA(lat, lng, {}).then((data) => {
     console.log('API called successfully. Returned data: ' + data);
     return data;
   });
