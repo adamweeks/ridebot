@@ -36,22 +36,36 @@ controller.hears('hello', 'direct_message,direct_mention', function(bot, message
 });
 
 controller.on('direct_mention', function(bot, message) {
-    // bot.reply(message, 'You mentioned me and said, "' + message.text + '"');
-    getETA().then((data) => {
-      bot.reply(message, `eta received: ${JSON.stringify(data)}`);
-    })
-    .catch((error) => {
-      console.error(error);
-    })
+    parseMessage(bot, message);
 });
 
 controller.on('direct_message', function(bot, message) {
-    bot.reply(message, 'I got your private message. You said, "' + message.text + '"');
+    parseMessage(bot, message);
 });
 
-function parseMessage(message) {
+function parseMessage(bot, message) {
   // Switch here on the first word of command
-  getETA();
+  var command = message.text.split(" ")[0];
+  switch(command.toLowerCase()) {
+        case 'eta':
+            break;
+        case 'status':
+            getStatus();
+            break;
+        case 'request':
+            requestRide();
+            break;
+        case 'cancel':
+            cancelRide();
+            break;
+        case 'cost':
+            break;
+        case 'halp':
+            break;
+        default: 
+            displayHelp();
+            break;
+  }
 }
 
 function getETA() {
