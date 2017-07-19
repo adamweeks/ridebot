@@ -4,7 +4,8 @@
   "description": "ridebot, yo",
   "main": "index.js",
   "dependencies": {
-    "botkit": "^0.5.5"
+    "botkit": "^0.5.5",
+    "dotenv": "^4.0.0"
   },
   "devDependencies": {},
   "scripts": {
