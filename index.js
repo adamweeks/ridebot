@@ -1,6 +1,12 @@
 var Botkit = require('botkit');
 require('dotenv').config();
 var lyft = require('node-lyft');
+
+var getStatus = require('./commands/get-status');
+var requestRide = require('./commands/request-ride');
+var cancelRide = require('./commands/cancel-ride');
+var displayHelp = require('./commands/display-help');
+
 var defaultClient = lyft.ApiClient.instance;
 defaultClient.authentications['Client Authentication'].accessToken = process.env.LYFT_TOKEN;
 //create a new lyft-node PublicApi() instance
@@ -42,6 +48,11 @@ controller.on('direct_mention', function(bot, message) {
 controller.on('direct_message', function(bot, message) {
     bot.reply(message, 'I got your private message. You said, "' + message.text + '"');
 });
+
+function parseMessage(message) {
+  // Switch here on the first word of command
+  getETA();
+}
 
 function getETA() {
   //the getETA endpoint works with both user and non-user context:
