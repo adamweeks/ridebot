@@ -1,11 +1,13 @@
 var Botkit = require('botkit');
 require('dotenv').config();
 var lyft = require('node-lyft');
+var moment = require('moment');
 
 var getStatus = require('./commands/get-status');
 var requestRide = require('./commands/request-ride');
 var cancelRide = require('./commands/cancel-ride');
 var displayHelp = require('./commands/display-help');
+var getEta = require('./commands/get-eta');
 
 var defaultClient = lyft.ApiClient.instance;
 defaultClient.authentications['Client Authentication'].accessToken = process.env.LYFT_TOKEN;
@@ -36,30 +38,26 @@ controller.hears('hello', 'direct_message,direct_mention', function(bot, message
 });
 
 controller.on('direct_mention', function(bot, message) {
-    // bot.reply(message, 'You mentioned me and said, "' + message.text + '"');
-    getETA().then((data) => {
-      bot.reply(message, `eta received: ${JSON.stringify(data)}`);
-    })
-    .catch((error) => {
-      console.error(error);
-    })
+    parseMessage(bot, message);
 });
 
 controller.on('direct_message', function(bot, message) {
     bot.reply(message, 'I got your private message. You said, "' + message.text + '"');
 });
 
-function parseMessage(message) {
+function parseMessage(bot, message) {
   // Switch here on the first word of command
-  getETA();
+  getEta(lyftPublicApi, {latitude: 37.7884, longitude: -122.4076}).then((data) => {
+    bot.reply(message, `A driver is ${moment().add(data.eta_seconds, `s`).toNow(true)} away`);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+  halp(bot, message);
 }
 
-function getETA() {
-  //the getETA endpoint works with both user and non-user context:
-  //leaving the options field empty {}
-  //and using promises/then to print out result
-  return lyftPublicApi.getETA(37.7884, -122.4076, {}).then((data) => {
-    console.log('API called successfully. Returned data: ' + data);
-    return data;
-  });
+function halp(bot, message) {
+  var halpert = `http://images5.fanpop.com/image/photos/27800000/8x01-The-List-jim-halpert-27875750-1279-714.jpg`;
+  bot.reply(message, {files:[halpert]});
 }
