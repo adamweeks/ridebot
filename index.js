@@ -18,7 +18,8 @@ var controller = Botkit.sparkbot({
     log: true,
     public_address: process.env.public_address,
     ciscospark_access_token: process.env.CISCOSPARK_ACCESS_TOKEN,
-    secret: process.env.secret
+    secret: process.env.secret,
+    json_file_store: './storage'
 });
 
 
@@ -46,7 +47,7 @@ controller.on('direct_mention', function(bot, message) {
 });
 
 controller.on('direct_message', function(bot, message) {
-    bot.reply(message, 'I got your private message. You said, "' + message.text + '"');
+  bot.reply(message, 'I got your private message. You said, "' + message.text + '"');
 });
 
 function parseMessage(message) {
