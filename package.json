@@ -6,6 +6,8 @@
   "dependencies": {
     "botkit": "^0.5.5",
     "dotenv": "^4.0.0",
+    "moment": "^2.18.1",
+    "node-geocoder": "^3.18.0",
     "node-lyft": "^1.0.3"
   },
   "devDependencies": {},
