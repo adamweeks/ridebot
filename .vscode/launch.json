@@ -7,6 +7,17 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Update Status",
+      "program": "${workspaceRoot}/scripts/updateStatus.js",
+      "args": [
+        "--rideId=",
+        "--status="
+      ],
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceRoot}/index.js",
       "protocol": "inspector"

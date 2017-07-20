@@ -10,7 +10,8 @@
     "node-geocoder": "^3.18.0",
     "node-lyft": "^1.0.3",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise": "^4.2.1",
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

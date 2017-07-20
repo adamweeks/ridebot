@@ -9,6 +9,7 @@ defaultUser.authentications['User Authentication'].accessToken = process.env.LYF
 // create a new lyft-node PublicApi() instance
 let lyftPublicApi = null;
 let lyftUserApi = null;
+let lyftSandBoxApi = null;
 
 function getLyftPublicApi() {
   return !lyftPublicApi ? new lyft.PublicApi() : lyftPublicApi;
@@ -18,7 +19,12 @@ function getLyftUserApi() {
   return !lyftUserApi ? new lyft.UserApi() : lyftUserApi;
 }
 
+function getLyftSandboxApi() {
+  return !lyftSandBoxApi ? new lyft.SandboxApi() : lyftSandBoxApi;
+}
+
 module.exports = {
   getLyftPublicApi,
+  getLyftSandboxApi,
   getLyftUserApi,
 };
