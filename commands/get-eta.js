@@ -1,25 +1,25 @@
 var moment = require('moment');
 var parseAddress = require('../utils/parse-address');
+var getLyftApi = require('../utils/lyft-api');
 
-
-function getEta(bot, message, initialArguments, lyftPublicApi) {
+function getEta(bot, message, initialArguments) {
   if (initialArguments) {
-    return parseAndFetch(initialArguments, lyftPublicApi, bot, message);
+    return parseAndFetch(initialArguments, bot, message);
   }
 
   // Start the conversation for getting an eta
   bot.startConversation(message, (err, convo) => {
     convo.ask(`What is your current location?`, (response, convo) => {
-      parseAndFetch(response.text, lyftPublicApi, bot, message).then(() => convo.next());
+      parseAndFetch(response.text, bot, message).then(() => convo.next());
     });
   });
 }
 
 
-function parseAndFetch(address, lyftPublicApi, bot, message) {
+function parseAndFetch(address, bot, message) {
   return parseAddress(address)
     .then((location) => {
-      return getEtaFromLyft(lyftPublicApi, location)
+      return getEtaFromLyft(location)
         .then((data) => {
           bot.reply(message, `A driver is ${moment().add(data.eta_seconds, `s`).toNow(true)} away from ${location.formattedAddress}`);
         })
@@ -33,13 +33,12 @@ function parseAndFetch(address, lyftPublicApi, bot, message) {
 }
 
 /**
- * @param {Object} lyftPublicApi
  * @param {Object} location
  * @param {Number} location.latitude
  * @param {Number} location.longitude
  */
-function getEtaFromLyft(lyftPublicApi, location) {
-  return lyftPublicApi.getETA(location.latitude, location.longitude, {}).then((data) => {
+function getEtaFromLyft(location) {
+  return getLyftApi().getETA(location.latitude, location.longitude, {}).then((data) => {
     return data.eta_estimates.find((estimate) => {
       return estimate.ride_type === `lyft`;
     });

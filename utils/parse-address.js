@@ -28,7 +28,6 @@ function parseAddress(address) {
   }
   return geocoder.geocode(address)
     .then((data) => {
-      console.info({data});
       if (data.length) {
 
         const lat = data[0].latitude;
