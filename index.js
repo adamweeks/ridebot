@@ -10,13 +10,14 @@ var requestRide = require('./commands/request-ride');
 var cancelRide = require('./commands/cancel-ride');
 var displayHelp = require('./commands/display-help');
 var getEta = require('./commands/get-eta');
+var getCost = require('./commands/get-cost');
 
 
 
 var defaultClient = lyft.ApiClient.instance;
 defaultClient.authentications['Client Authentication'].accessToken = process.env.LYFT_TOKEN;
 //create a new lyft-node PublicApi() instance
-var lyftPublicApi = new lyft.PublicApi()
+var lyftApi = new lyft.SandboxApi();
 
 // Sparkbot settings
 var controller = Botkit.sparkbot({
@@ -32,6 +33,7 @@ var controller = Botkit.sparkbot({
 var bot = controller.spawn({
 });
 
+GLOBAL.bot = bot;
 
 controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
   controller.createWebhookEndpoints(webserver, bot, function() {
@@ -54,12 +56,13 @@ controller.on('direct_message', function(bot, message) {
 function parseMessage(bot, message) {
   // Switch here on the first word of command
   var splitString = message.text.split(` `);
-  var command = splitString[0];
+  var command = splitString[0].toLowerCase();
   splitString.shift();
   var arguments = splitString.join(` `);
+  
   switch(command.toLowerCase()) {
     case 'eta':
-      return getEta(bot, message, arguments, lyftPublicApi);
+      return getEta(bot, message, arguments, lyftApi);
       break;
     case 'status':
         getStatus();
@@ -71,7 +74,8 @@ function parseMessage(bot, message) {
         cancelRide();
         break;
     case 'cost':
-        break;
+      getCost(message, arguments, lyftApi);
+      break;
     case 'halp':
         break;
     default:
