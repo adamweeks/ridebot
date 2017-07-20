@@ -2,9 +2,9 @@ const moment = require(`moment`);
 const parseAddress = require(`../utils/parse-address`);
 const getLyftApi = require(`../utils/lyft-api`);
 
-function getEta(bot, message, initialArguments) {
+function getEta(message, initialArguments) {
   if (initialArguments) {
-    return parseAndFetch(initialArguments, bot, message);
+    return parseAndFetch(initialArguments, message);
   }
 
   // Start the conversation for getting an eta
@@ -16,7 +16,7 @@ function getEta(bot, message, initialArguments) {
 }
 
 
-function parseAndFetch(address, bot, message) {
+function parseAndFetch(address, message) {
   return parseAddress(address)
     .then((location) => {
       return getEtaFromLyft(location)

@@ -1,15 +1,12 @@
-require('dotenv').config();
+require(`dotenv`).config();
 
-var Botkit = require('botkit');
-var moment = require('moment');
-
-var parseAddress = require('./utils/parse-address');
-var getStatus = require('./commands/get-status');
-var requestRide = require('./commands/request-ride');
-var cancelRide = require('./commands/cancel-ride');
-var displayHelp = require('./commands/display-help');
-var getEta = require('./commands/get-eta');
-var getCost = require('./commands/get-cost');
+const Botkit = require(`botkit`);
+const getStatus = require(`./commands/get-status`);
+const requestRide = require(`./commands/request-ride`);
+const cancelRide = require(`./commands/cancel-ride`);
+const displayHelp = require(`./commands/display-help`);
+const getEta = require(`./commands/get-eta`);
+const getCost = require(`./commands/get-cost`);
 
 // Sparkbot settings
 var controller = Botkit.sparkbot({
@@ -18,7 +15,7 @@ var controller = Botkit.sparkbot({
   public_address: process.env.public_address,
   ciscospark_access_token: process.env.CISCOSPARK_ACCESS_TOKEN,
   secret: process.env.secret,
-  json_file_store: './storage'
+  json_file_store: `./storage`
 });
 
 // Sparkbot instance
@@ -33,16 +30,12 @@ controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
   });
 });
 
-controller.hears('hello', 'direct_message,direct_mention', function(bot, message) {
-    bot.reply(message, 'Hi');
-});
-
 controller.on('direct_mention', function(bot, message) {
   parseMessage(bot, message);
 });
 
 controller.on('direct_message', function(bot, message) {
-    parseMessage(bot, message);
+  parseMessage(bot, message);
 });
 
 function parseMessage(bot, message) {
@@ -50,11 +43,11 @@ function parseMessage(bot, message) {
   var splitString = message.text.split(` `);
   var command = splitString[0].toLowerCase();
   splitString.shift();
-  var arguments = splitString.join(` `);
-  
+  var initialArguments = splitString.join(` `);
+
   switch(command.toLowerCase()) {
     case 'eta':
-      return getEta(bot, message, arguments);
+      getEta(message, initialArguments);
       break;
     case 'status':
       getStatus();
@@ -66,18 +59,18 @@ function parseMessage(bot, message) {
         cancelRide();
         break;
     case 'cost':
-      getCost(message, arguments);
+      getCost(message, initialArguments);
       break;
     case 'halp':
-      halp(bot, message);
+      halp(message);
       break;
     default:
-      displayHelp(bot, message);
+      displayHelp(message);
       break;
   }
 }
 
-function halp(bot, message) {
+function halp(message) {
   var halpert = `http://images5.fanpop.com/image/photos/27800000/8x01-The-List-jim-halpert-27875750-1279-714.jpg`;
   bot.reply(message, {files:[halpert]});
 }
