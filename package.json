@@ -10,7 +10,9 @@
     "node-geocoder": "^3.18.0",
     "node-lyft": "^1.0.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
