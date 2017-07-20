@@ -54,8 +54,8 @@ function parseMessage(bot, message) {
       return getEta(bot, message, arguments);
       break;
     case 'status':
-        getStatus();
-        break;
+      getStatus();
+      break;
     case 'request':
         requestRide();
         break;
@@ -65,10 +65,11 @@ function parseMessage(bot, message) {
     case 'cost':
         break;
     case 'halp':
-        break;
+      halp(bot, message);
+      break;
     default:
-        displayHelp(bot, message);
-        break;
+      displayHelp(bot, message);
+      break;
   }
 }
 
