@@ -20,7 +20,7 @@ function getCost(message, lyftApi) {
         });
     },{},'default');
 
-    convo.addQuestion('Where would you like to be dropped up?',function(response,convo) {
+    convo.addQuestion('Where would you like to be dropped off?',function(response,convo) {
       console.info(response);
       return parseAddress(response.text)
         .then((location) => {
@@ -35,7 +35,7 @@ function getCost(message, lyftApi) {
                   convo.say(`Your ride from \
                   \n${start.formattedAddress}\
                   \n to ${end.formattedAddress}\
-                  \n will cost $${cost.estimated_cost_cents_min / 100} - $${cost.estimated_cost_cents_max / 100}`);
+                  \n will cost $${formatCost(cost.estimated_cost_cents_min)} - $${formatCost(cost.estimated_cost_cents_max)}`);
                   convo.next();
                 }
                 else {
@@ -45,11 +45,12 @@ function getCost(message, lyftApi) {
                   \n doesn't make sense... why don't we try that again...`);
                 }
               })
-              .catch(() => {
-                convo.transitionTo(`default`, `Your ride from \
+              .catch((error) => {
+                convo.transitionTo(`default`, `There was an error estimating your ride from \
                   \n${start.formattedAddress}\
                   \n to ${end.formattedAddress}\
-                  \n doesn't make sense... why don't we try that again...`);
+                  \n why don't we try that again...`);
+                throw new Error(error);
               });
           }
           else {
@@ -68,6 +69,14 @@ function getCostFromLyft(lyftApi, start, end) {
   }, (error) => {
     console.error(error);
   });
+}
+
+function formatCost(cost) {
+  let fcost = cost / 100;
+  if (Math.floor(fcost) === fcost) {
+    return Math.floor(fcost);
+  }
+  return fcost.toFixed(2);
 }
 
 
