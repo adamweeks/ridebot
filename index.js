@@ -32,15 +32,11 @@ controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
   });
 });
 
-controller.on('direct_mention', function(bot, message) {
-  parseMessage(bot, message);
+controller.on('direct_mention,direct_message', function(bot, message) {
+  parseMessage(message);
 });
 
-controller.on('direct_message', function(bot, message) {
-  parseMessage(bot, message);
-});
-
-function parseMessage(bot, message) {
+function parseMessage(message) {
   // Switch here on the first word of command
   var splitString = message.text.split(` `);
   var command = splitString[0].toLowerCase();

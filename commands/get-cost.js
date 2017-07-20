@@ -66,6 +66,7 @@ function getCost(message, lyftApi) {
         callback: function(response,convo) {
           convo.say('Great! I will request your ride.');
           requestRide(message, { lat: start.latitude, lng: start.longitude }, { lat: end.latitude, lng: end.longitude });
+          convo.next();
         }
       },
       {
