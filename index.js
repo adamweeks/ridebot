@@ -57,7 +57,7 @@ function parseMessage(bot, message) {
       sendMap(message, initialArguments);
       break;
     case 'request':
-      requestRide();
+      requestRide(bot, message, { lat: 28.6114930, lng: -81.3025780 }, { lat: 28.5064120, lng: -81.4678970 });
       break;
     case 'cancel':
       cancelRide();

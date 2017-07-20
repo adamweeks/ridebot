@@ -1,12 +1,24 @@
-var lyft = require('node-lyft');
+let lyft = require('node-lyft');
 
-var defaultClient = lyft.ApiClient.instance;
+let defaultClient = lyft.ApiClient.instance;
 defaultClient.authentications['Client Authentication'].accessToken = process.env.LYFT_TOKEN;
-//create a new lyft-node PublicApi() instance
-var lyftPublicApi = null;
 
-function getLyftApi() {
+let defaultUser = lyft.ApiClient.instance;
+defaultUser.authentications['User Authentication'].accessToken = process.env.LYFT_TOKEN;
+
+// create a new lyft-node PublicApi() instance
+let lyftPublicApi = null;
+let lyftUserApi = null;
+
+function getLyftPublicApi() {
   return !lyftPublicApi ? new lyft.PublicApi() : lyftPublicApi;
 }
 
-module.exports = getLyftApi;
+function getLyftUserApi() {
+  return !lyftUserApi ? new lyft.UserApi() : lyftUserApi;
+}
+
+module.exports = {
+  getLyftPublicApi,
+  getLyftUserApi,
+};
