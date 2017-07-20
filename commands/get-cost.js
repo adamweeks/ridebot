@@ -1,5 +1,6 @@
 var parseAddress = require('../utils/parse-address');
-var getLyftApi = require('../utils/lyft-api');
+var {getLyftPublicApi} = require('../utils/lyft-api');
+const requestRide = require(`./request-ride`);
 
 function getCost(message, lyftApi) {
   bot.createConversation(message, function(err, convo) {
@@ -32,11 +33,10 @@ function getCost(message, lyftApi) {
                 console.log(costObj);
                 cost = costObj.cost_estimates[0];
                 if (cost.is_valid_estimate) {
-                  convo.say(`Your ride from \
+                  convo.transitionTo(`confirm`, `Your ride from \
                   \n${start.formattedAddress}\
                   \n to ${end.formattedAddress}\
                   \n will cost $${formatCost(cost.estimated_cost_cents_min)} - $${formatCost(cost.estimated_cost_cents_max)}`);
-                  convo.next();
                 }
                 else {
                 convo.transitionTo(`default`, `Your ride from \
@@ -59,12 +59,37 @@ function getCost(message, lyftApi) {
           }
         });
     },{},'drop_off');
+
+    convo.addQuestion('Would you like to request this ride?',[
+      {
+        pattern: bot.utterances.yes,
+        callback: function(response,convo) {
+          convo.say('Great! I will request your ride.');
+          requestRide(message, { lat: start.latitude, lng: start.longitude }, { lat: end.latitude, lng: end.longitude });
+        }
+      },
+      {
+        pattern: bot.utterances.no,
+        callback: function(response,convo) {
+          convo.say('Perhaps later.');
+          convo.next();
+        }
+      },
+      {
+        default: true,
+        callback: function(response,convo) {
+          convo.repeat();
+          convo.next();
+        }
+      }
+    ],{},'confirm');
+
     convo.activate();
   });
 }
 
 function getCostFromLyft(lyftApi, start, end) {
-  return getLyftApi().getCost(start.latitude, start.longitude, {endLat: end.latitude, endLng: end.longitude, rideType: `lyft`}).then((data) => {
+  return getLyftPublicApi().getCost(start.latitude, start.longitude, {endLat: end.latitude, endLng: end.longitude, rideType: `lyft`}).then((data) => {
     return data;
   }, (error) => {
     console.error(error);

@@ -2,7 +2,6 @@ require(`dotenv`).config();
 
 const Botkit = require(`botkit`);
 const getStatus = require(`./commands/get-status`);
-const requestRide = require(`./commands/request-ride`);
 const cancelRide = require(`./commands/cancel-ride`);
 const displayHelp = require(`./commands/display-help`);
 const getEta = require(`./commands/get-eta`);
@@ -23,7 +22,9 @@ var controller = Botkit.sparkbot({
 var bot = controller.spawn({
 });
 
+
 GLOBAL.bot = bot;
+GLOBAL.controller = controller;
 
 controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
   controller.createWebhookEndpoints(webserver, bot, function() {
@@ -56,12 +57,10 @@ function parseMessage(bot, message) {
     case 'map':
       sendMap(message, initialArguments);
       break;
-    case 'request':
-      requestRide(bot, message, { lat: 28.6114930, lng: -81.3025780 }, { lat: 28.5064120, lng: -81.4678970 });
-      break;
     case 'cancel':
       cancelRide();
       break;
+    case 'request':
     case 'cost':
       getCost(message, initialArguments);
       break;

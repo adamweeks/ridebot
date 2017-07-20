@@ -10,7 +10,7 @@ function getEta(message, initialArguments) {
   // Start the conversation for getting an eta
   return bot.startConversation(message, (err, convo) => {
     convo.ask(`What is your current location?`, (response, responseconvo) => {
-      parseAndFetch(response.text, bot, message).then(() => responseconvo.next());
+      parseAndFetch(response.text, message).then(() => responseconvo.next());
     });
   });
 }
@@ -19,6 +19,7 @@ function getEta(message, initialArguments) {
 function parseAndFetch(address, message) {
   return parseAddress(address)
     .then((location) => {
+      console.info(location);
       return getEtaFromLyft(location)
         .then((data) => {
           bot.reply(message, `A driver is ${moment().add(data.eta_seconds, `s`).toNow(true)} away from ${location.formattedAddress}`);
