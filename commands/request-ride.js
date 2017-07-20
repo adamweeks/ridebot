@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const {setUserRide} = require(`../utils/rides`);
 
 /**
  *
@@ -31,6 +32,9 @@ function requestRide(message, from, to) {
   return rp(options)
     .then(function (data) {
       try {
+        // Store ride data for user
+        console.info(`Ride (${data.ride_id}) Stored for user: ${message.user}`);
+        setUserRide(message.user, data.ride_id);
         bot.reply(message, {
           text: `Hey ${data.passenger.first_name}, your ride request has been submitted with a status of ${data.status}`,
           markdown: `Hey **${data.passenger.first_name}**, your ride request has been submitted with a status of **${data.status.toUpperCase()}**`

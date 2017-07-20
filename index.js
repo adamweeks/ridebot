@@ -22,9 +22,8 @@ var controller = Botkit.sparkbot({
 var bot = controller.spawn({
 });
 
-
-GLOBAL.bot = bot;
-GLOBAL.controller = controller;
+global.bot = bot;
+global.controller = controller;
 
 controller.setupWebserver(process.env.PORT || 3000, function(err, webserver) {
   controller.createWebhookEndpoints(webserver, bot, function() {
@@ -48,7 +47,7 @@ function parseMessage(message) {
       getEta(message, initialArguments);
       break;
     case 'status':
-      getStatus();
+      getStatus(message);
       break;
     case 'map':
       sendMap(message, initialArguments);
