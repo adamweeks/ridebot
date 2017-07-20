@@ -53,9 +53,10 @@ controller.on('direct_message', function(bot, message) {
 
 function parseMessage(bot, message) {
   // Switch here on the first word of command
-  var splitString = message.text.split(" ", 2);
+  var splitString = message.text.split(` `);
   var command = splitString[0];
-  var arguments = splitString[1];
+  splitString.shift();
+  var arguments = splitString.join(` `);
   switch(command.toLowerCase()) {
     case 'eta':
       return getEta(bot, message, arguments, lyftPublicApi);
