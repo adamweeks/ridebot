@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 var Botkit = require('botkit');
-var lyft = require('node-lyft');
 var moment = require('moment');
 
 var parseAddress = require('./utils/parse-address');
@@ -10,13 +9,6 @@ var requestRide = require('./commands/request-ride');
 var cancelRide = require('./commands/cancel-ride');
 var displayHelp = require('./commands/display-help');
 var getEta = require('./commands/get-eta');
-
-
-
-var defaultClient = lyft.ApiClient.instance;
-defaultClient.authentications['Client Authentication'].accessToken = process.env.LYFT_TOKEN;
-//create a new lyft-node PublicApi() instance
-var lyftPublicApi = new lyft.PublicApi()
 
 // Sparkbot settings
 var controller = Botkit.sparkbot({
@@ -59,7 +51,7 @@ function parseMessage(bot, message) {
   var arguments = splitString.join(` `);
   switch(command.toLowerCase()) {
     case 'eta':
-      return getEta(bot, message, arguments, lyftPublicApi);
+      return getEta(bot, message, arguments);
       break;
     case 'status':
         getStatus();
