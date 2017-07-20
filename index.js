@@ -75,7 +75,7 @@ function parseMessage(bot, message) {
     case 'halp':
         break;
     default:
-        displayHelp();
+        displayHelp(bot, message);
         break;
   }
 }
