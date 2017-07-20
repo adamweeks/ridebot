@@ -4,28 +4,33 @@ var parseAddress = require('../utils/parse-address');
 
 function getEta(bot, message, initialArguments, lyftPublicApi) {
   if (initialArguments) {
-    return parseAddress(initialArguments)
-      .then((location) => {
-        return getEtaFromLyft(lyftPublicApi, location)
-          .then((data) => {
-            bot.reply(message, `A driver is ${moment().add(data.eta_seconds, `s`).toNow(true)} away`);
-          })
-          .catch((error) => {
-            bot.reply(message, `Sorry, we had problems contacting lyft: ${error.message}`);
-          });
-        })
-      .catch((error) => {
-        bot.reply(message, `Sorry, we couldn't determine the location (${initialArguments}): ${error.message}`);
-      });
-
+    return parseAndFetch(initialArguments, lyftPublicApi, bot, message);
   }
 
   // Start the conversation for getting an eta
   bot.startConversation(message, (err, convo) => {
-    // TODO: Function
-  })
+    convo.ask(`What is your current location?`, (response, convo) => {
+      parseAndFetch(response.text, lyftPublicApi, bot, message).then(() => convo.next());
+    });
+  });
 }
 
+
+function parseAndFetch(address, lyftPublicApi, bot, message) {
+  return parseAddress(address)
+    .then((location) => {
+      return getEtaFromLyft(lyftPublicApi, location)
+        .then((data) => {
+          bot.reply(message, `A driver is ${moment().add(data.eta_seconds, `s`).toNow(true)} away from ${location.formattedAddress}`);
+        })
+        .catch((error) => {
+          bot.reply(message, `Sorry, we had problems contacting lyft: ${error.message}`);
+        });
+      })
+    .catch((error) => {
+      bot.reply(message, `Sorry, we couldn't determine the location (${initialArguments}): ${error.message}`);
+    });
+}
 
 /**
  * @param {Object} lyftPublicApi

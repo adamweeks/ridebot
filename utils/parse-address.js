@@ -17,19 +17,25 @@ var options = {
 // Google instance
 var geocoder = NodeGeocoder(options);
 
-
+/**
+ *
+ * @param {String} address
+ * @returns {Promise}
+ */
 function parseAddress(address) {
   if (!address) {
     return Promise.reject(new Error(`An address is required to use this.`));
   }
   return geocoder.geocode(address)
     .then((data) => {
+      console.info({data});
       if (data.length) {
 
         const lat = data[0].latitude;
         const lgn = data[0].longitude;
 
         return {
+          formattedAddress: data[0].formattedAddress,
           latitude: lat,
           longitude: lgn
         };
