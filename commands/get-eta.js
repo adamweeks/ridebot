@@ -1,6 +1,6 @@
-var moment = require('moment');
-var parseAddress = require('../utils/parse-address');
-var getLyftApi = require('../utils/lyft-api');
+const moment = require(`moment`);
+const parseAddress = require(`../utils/parse-address`);
+const getLyftApi = require(`../utils/lyft-api`);
 
 function getEta(bot, message, initialArguments) {
   if (initialArguments) {
@@ -8,9 +8,9 @@ function getEta(bot, message, initialArguments) {
   }
 
   // Start the conversation for getting an eta
-  bot.startConversation(message, (err, convo) => {
-    convo.ask(`What is your current location?`, (response, convo) => {
-      parseAndFetch(response.text, bot, message).then(() => convo.next());
+  return bot.startConversation(message, (err, convo) => {
+    convo.ask(`What is your current location?`, (response, responseconvo) => {
+      parseAndFetch(response.text, bot, message).then(() => responseconvo.next());
     });
   });
 }
@@ -26,9 +26,9 @@ function parseAndFetch(address, bot, message) {
         .catch((error) => {
           bot.reply(message, `Sorry, we had problems contacting lyft: ${error.message}`);
         });
-      })
+    })
     .catch((error) => {
-      bot.reply(message, `Sorry, we couldn't determine the location (${initialArguments}): ${error.message}`);
+      bot.reply(message, `Sorry, we couldn't determine the location (${address}): ${error.message}`);
     });
 }
 
@@ -38,11 +38,9 @@ function parseAndFetch(address, bot, message) {
  * @param {Number} location.longitude
  */
 function getEtaFromLyft(location) {
-  return getLyftApi().getETA(location.latitude, location.longitude, {}).then((data) => {
-    return data.eta_estimates.find((estimate) => {
-      return estimate.ride_type === `lyft`;
-    });
-  });
+  return getLyftApi()
+    .getETA(location.latitude, location.longitude, {})
+    .then(data => data.eta_estimates.find(estimate => estimate.ride_type === `lyft`));
 }
 
 /*
