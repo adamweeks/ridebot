@@ -1,5 +1,5 @@
 var parseAddress = require('../utils/parse-address');
-var getLyftApi = require('../utils/lyft-api');
+var { getLyftPublicApi } = require('../utils/lyft-api');
 
 function getCost(message, lyftApi) {
   bot.createConversation(message, function(err, convo) {
@@ -64,7 +64,7 @@ function getCost(message, lyftApi) {
 }
 
 function getCostFromLyft(lyftApi, start, end) {
-  return getLyftApi().getCost(start.latitude, start.longitude, {endLat: end.latitude, endLng: end.longitude, rideType: `lyft`}).then((data) => {
+  return getLyftPublicApi().getCost(start.latitude, start.longitude, {endLat: end.latitude, endLng: end.longitude, rideType: `lyft`}).then((data) => {
     return data;
   }, (error) => {
     console.error(error);
