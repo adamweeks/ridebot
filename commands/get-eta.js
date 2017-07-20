@@ -1,6 +1,6 @@
-const moment = require(`moment`);
-const parseAddress = require(`../utils/parse-address`);
-const getLyftApi = require(`../utils/lyft-api`);
+var moment = require('moment');
+var parseAddress = require('../utils/parse-address');
+var { getLyftPublicApi } = require('../utils/lyft-api');
 
 function getEta(message, initialArguments) {
   if (initialArguments) {
@@ -38,7 +38,7 @@ function parseAndFetch(address, message) {
  * @param {Number} location.longitude
  */
 function getEtaFromLyft(location) {
-  return getLyftApi()
+  return getLyftPublicApi()
     .getETA(location.latitude, location.longitude, {})
     .then(data => data.eta_estimates.find(estimate => estimate.ride_type === `lyft`));
 }
