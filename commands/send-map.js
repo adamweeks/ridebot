@@ -6,6 +6,6 @@ module.exports = function sendMap(message, location) {
     .then((loc) => {
       const mapUrl = getMapUrl(loc.longitude, loc.latitude);
       console.log(mapUrl);
-      bot.reply(message, {text: loc.formattedAddress, files:[mapUrl]});
+      return bot.reply(message, {text: loc.formattedAddress, files:[mapUrl]});
     });
 };

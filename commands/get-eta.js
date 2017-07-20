@@ -3,6 +3,7 @@ var parseAddress = require('../utils/parse-address');
 var { getLyftPublicApi } = require('../utils/lyft-api');
 
 function getEta(message, initialArguments) {
+  console.log(message);
   if (initialArguments) {
     return parseAndFetch(initialArguments, message);
   }

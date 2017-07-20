@@ -37,9 +37,30 @@ function getStatus(message) {
 
       }
     })
-
-
-
 }
-
 module.exports = getStatus;
+/*
+{
+  "status": "pending",
+  "ride_id": "123",
+  "ride_type": "lyft",
+  "passenger": {
+    "rating": "5",
+    "first_name": "John",
+    "last_name": "Smith",
+    "image_url": "https://lyft.com/max1200.jpg",
+    "user_id": "123"
+  },
+  "destination": {
+    "lat": 37.771,
+    "lng": -122.39123,
+    "eta_seconds": null,
+    "address": "Mission Bay Boulevard North"
+  },
+  "origin": {
+    "lat": 37.77663,
+    "lng": -122.39227,
+    "address": null
+  }
+}
+*/
