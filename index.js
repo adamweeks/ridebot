@@ -7,6 +7,7 @@ const cancelRide = require(`./commands/cancel-ride`);
 const displayHelp = require(`./commands/display-help`);
 const getEta = require(`./commands/get-eta`);
 const getCost = require(`./commands/get-cost`);
+const sendMap = require(`./commands/send-map`);
 
 // Sparkbot settings
 var controller = Botkit.sparkbot({
@@ -52,12 +53,15 @@ function parseMessage(bot, message) {
     case 'status':
       getStatus();
       break;
+    case 'map':
+      sendMap(message, initialArguments);
+      break;
     case 'request':
-        requestRide();
-        break;
+      requestRide();
+      break;
     case 'cancel':
-        cancelRide();
-        break;
+      cancelRide();
+      break;
     case 'cost':
       getCost(message, initialArguments);
       break;
